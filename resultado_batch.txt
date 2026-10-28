@@ -1,0 +1,220 @@
+26/10/28 15:41:31 WARN Utils: Your hostname, PC-72-GT-2GH04 resolves to a loopback address: 127.0.1.1; using 10.255.255.254 instead (on interface lo)
+26/10/28 15:41:31 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/10/28 15:41:31 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 4:>                                                        (0 + 32) / 32]                                                                                26/10/28 15:41:36 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[Stage 7:>                                                        (0 + 32) / 32]                                                                                
+===== 1. CARGA DEL DATASET =====
+Filas originales: 6390971
+Columnas: 23
+root
+ |-- fecha_reporte: string (nullable = true)
+ |-- id_caso: string (nullable = true)
+ |-- fecha_notificacion: string (nullable = true)
+ |-- cod_depto: string (nullable = true)
+ |-- departamento: string (nullable = true)
+ |-- cod_municipio: string (nullable = true)
+ |-- municipio: string (nullable = true)
+ |-- edad: string (nullable = true)
+ |-- unidad_edad: string (nullable = true)
+ |-- sexo: string (nullable = true)
+ |-- tipo_contagio: string (nullable = true)
+ |-- ubicacion: string (nullable = true)
+ |-- estado: string (nullable = true)
+ |-- cod_pais: string (nullable = true)
+ |-- pais: string (nullable = true)
+ |-- recuperado: string (nullable = true)
+ |-- fecha_inicio_sintomas: string (nullable = true)
+ |-- fecha_muerte: string (nullable = true)
+ |-- fecha_diagnostico: string (nullable = true)
+ |-- fecha_recuperacion: string (nullable = true)
+ |-- tipo_recuperacion: string (nullable = true)
+ |-- pertenencia_etnica: string (nullable = true)
+ |-- grupo_etnico: string (nullable = true)
+
+Unidades de medida de edad (1=años, 2=meses, 3=días):
++-----------+-------+
+|unidad_edad|  count|
++-----------+-------+
+|          1|6357475|
+|          2|  30732|
+|          3|   2762|
+|          4|      1|
+|          5|      1|
++-----------+-------+
+
+
+===== 2. LIMPIEZA Y TRANSFORMACIÓN =====
+Dataset limpio guardado en formato Parquet: /home/ingdesarrollo03/proyecto_batch/data/covid_limpio.parquet
+
+===== 3. ANÁLISIS EXPLORATORIO =====
+Filas originales : 6390971
+Filas después de limpiar: 6390955
+Filas descartadas: 16
+
+--- Estadísticas de la edad (años) ---
++-------+-----------------+
+|summary|       edad_anios|
++-------+-----------------+
+|  count|          6390955|
+|   mean|39.94838658698113|
+| stddev|18.53662255647034|
+|    min|                0|
+|    max|              110|
++-------+-----------------+
+
+--- Valores nulos por columna ---
+-RECORD 0------------------------
+ id_caso               | 0       
+ fecha_notificacion    | 0       
+ departamento          | 0       
+ municipio             | 0       
+ edad_anios            | 0       
+ grupo_edad            | 0       
+ sexo                  | 0       
+ tipo_contagio         | 0       
+ ubicacion             | 0       
+ estado                | 0       
+ recuperado            | 0       
+ fecha_inicio_sintomas | 505383  
+ fecha_muerte          | 6206566 
+ fallecido             | 0       
+ anio_mes              | 0       
+
+--- Casos por departamento (Top 15) ---
++---------------+-------+----------+-------------+
+|departamento   |casos  |fallecidos|letalidad_pct|
++---------------+-------+----------+-------------+
+|BOGOTA         |1888134|40037     |2.12         |
+|ANTIOQUIA      |955267 |23328     |2.44         |
+|VALLE          |572721 |20448     |3.57         |
+|CUNDINAMARCA   |331335 |9720      |2.93         |
+|SANTANDER      |297531 |10279     |3.45         |
+|BARRANQUILLA   |277988 |7950      |2.86         |
+|CARTAGENA      |163526 |3088      |1.89         |
+|ATLANTICO      |141072 |5189      |3.68         |
+|BOYACA         |131133 |4011      |3.06         |
+|TOLIMA         |127765 |5140      |4.02         |
+|NORTE SANTANDER|126014 |6264      |4.97         |
+|CORDOBA        |123095 |5227      |4.25         |
+|CALDAS         |120030 |3606      |3.0          |
+|RISARALDA      |110235 |3434      |3.12         |
+|CESAR          |109830 |3587      |3.27         |
++---------------+-------+----------+-------------+
+only showing top 15 rows
+
+--- Casos por sexo ---
++----+-------+
+|sexo|  casos|
++----+-------+
+|   M|2973868|
+|   F|3417087|
++----+-------+
+
+--- Casos y letalidad por grupo de edad ---
++----------+-------+----------+-------------+
+|grupo_edad|casos  |fallecidos|letalidad_pct|
++----------+-------+----------+-------------+
+|0-9       |250070 |813       |0.33         |
+|10-19     |459434 |691       |0.15         |
+|20-29     |1318733|2953      |0.22         |
+|30-39     |1410842|6289      |0.45         |
+|40-49     |1072036|12588     |1.17         |
+|50-59     |863465 |24653     |2.86         |
+|60-69     |558515 |39517     |7.08         |
+|70-79     |286191 |44411     |15.52        |
+|80+       |171669 |52474     |30.57        |
++----------+-------+----------+-------------+
+
+--- Casos por mes de notificación ---
++--------+------+
+|anio_mes|casos |
++--------+------+
+|2020-03 |1913  |
+|2020-04 |6994  |
+|2020-05 |30694 |
+|2020-06 |95836 |
+|2020-07 |265376|
+|2020-08 |275237|
+|2020-09 |214750|
+|2020-10 |262022|
+|2020-11 |226188|
+|2020-12 |377956|
+|2021-01 |412135|
+|2021-02 |116462|
+|2021-03 |213628|
+|2021-04 |494102|
+|2021-05 |612105|
+|2021-06 |850536|
+|2021-07 |390782|
+|2021-08 |84993 |
+|2021-09 |41500 |
+|2021-10 |44528 |
+|2021-11 |65427 |
+|2021-12 |195016|
+|2022-01 |703060|
+|2022-02 |97736 |
+|2022-03 |11969 |
+|2022-04 |6306  |
+|2022-05 |24586 |
+|2022-06 |85195 |
+|2022-07 |80943 |
+|2022-08 |18032 |
+|2022-09 |3346  |
+|2022-10 |2341  |
+|2022-11 |10657 |
+|2022-12 |29288 |
+|2023-01 |7363  |
+|2023-02 |3116  |
+|2023-03 |2689  |
+|2023-04 |2467  |
+|2023-05 |4349  |
+|2023-06 |4303  |
+|2023-07 |3730  |
+|2023-08 |2710  |
+|2023-09 |1431  |
+|2023-10 |1070  |
+|2023-11 |1084  |
+|2023-12 |2411  |
+|2024-01 |2593  |
++--------+------+
+
+--- Casos por gravedad (estado) ---
++---------+-------+
+|   estado|  casos|
++---------+-------+
+|     LEVE|6205404|
+|FALLECIDO| 143123|
+|      N/A|  41266|
+| MODERADO|   1056|
+|    GRAVE|    106|
++---------+-------+
+
+--- Top 10 municipios ---
++------------+-------+
+|municipio   |casos  |
++------------+-------+
+|BOGOTA      |1888134|
+|MEDELLIN    |550792 |
+|CALI        |406750 |
+|BARRANQUILLA|277988 |
+|CARTAGENA   |163526 |
+|BUCARAMANGA |142842 |
+|IBAGUE      |91598  |
+|SANTA MARTA |84863  |
+|MANIZALES   |84478  |
+|CUCUTA      |77359  |
++------------+-------+
+only showing top 10 rows
+
+
+===== 4. VISUALIZACIÓN =====
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/01_casos_por_departamento.png
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/02_casos_por_sexo.png
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/03_edad_casos_y_letalidad.png
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/04_casos_por_mes.png
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/05_casos_por_gravedad.png
+Gráfica guardada: /home/ingdesarrollo03/proyecto_batch/output/06_top_municipios.png
+
+Proceso terminado. Gráficas en: /home/ingdesarrollo03/proyecto_batch/output
