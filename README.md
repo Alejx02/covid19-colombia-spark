@@ -1,7 +1,7 @@
 # Análisis de casos de COVID-19 en Colombia con Apache Spark
 
-Proyecto de la Tarea 3 del curso Big Data (202016911), UNAD.
-Autora: [TU NOMBRE COMPLETO]
+Proyecto de la Tarea 3 del curso Big Data 202016911_85.
+Autora: Maria Alejandra Parra Salgado
 
 ## Problema
 
